@@ -1,0 +1,50 @@
+<!-- Validation failure messages -->
+<% if @question.errors.any? %>
+  <% @question.errors.full_messages.each do |message| %>
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="page-header">
+  <h3>Add Question</h3>
+  <h4>Add an actionable Yes/No question so you can keep track of your daily progress. Example: Did I show up all time today?</h4>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="/create_question_g" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for goal_id -->
+      <div class="form-group">
+        <label for="goal_id" class="control-label">
+          Goal: <%= @goal.goal_text %>
+        </label>
+        <input id="goal_id" name="goal_id" type="hidden" value="<%= @goal.id %>">
+      </div>
+
+      <!-- Label and input for question_text -->
+      <div class="form-group">
+        <label for="question_text" class="control-label">
+          Question text
+        </label>
+
+        <textarea id="question_text" name="question_text" placeholder="Question text" class="form-control" rows="3"><%= @question.question_text %></textarea>
+      </div>
+
+
+      <!-- Label and input for cadence -->
+      <input id="cadence" name="cadence" type="hidden" value=1>
+
+      <button class="btn btn-success">
+        Create Question
+      </button>
+      or
+      <a href="/questions">Cancel</a>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+<div class="page-header">
+  <h3>Goal: <%= @goal.goal_text %></h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <table class="table ">
+      <tr>
+        <th>Questions for your goal</th>
+        <th>Progress</th>
+        <th style="text-align:center">Progress graph</th>
+        <th>Status</th>
+        <th>Buttons</th>
+      </tr>
+
+      <% @goal.questions.each do |question| %>
+      <tr>
+        <td><%= question.question_text %></td>
+
+        <% @count= question.answers.count %>
+        <% @count_true= question.answers.select{|h| h["answer_text"] == true}.count %>
+
+        <% if @count == 0 then @stat="NA" else @stat = number_to_percentage(@count_true.to_f/@count.to_f*100, precision:1)end%>
+        <td><%= @stat%></td>
+
+        <td>
+        <img src='http://chart.apis.google.com/chart?cht=p3&chs=200x100&chd=t:<%=@stat.to_f%>,<%=100-@stat.to_f%>&chdl=Complete|Incomplete&chdlp=r&chco=ff0000'>
+        </td>
+
+        <% @latest_date = question.answers.maximum(:questioned_on) %>
+        <% if @latest_date.nil?%>
+            <td class="text-danger">Missing all answers</td>
+            <td>
+              <a href="/answers/new/<%= question.id %>" class="btn btn-success">Start new answers</a>
+              <a href="/questions/<%= question.id%>/edit" class="btn btn-warning">Edit question</a>
+            </td>
+        <%elsif @latest_date < Time.now.to_date%>
+            <td class="text-warning">Missing answers</td>
+            <td>
+              <a href="/answers/new/<%= question.id %>" class="btn btn-success">Add missing answers</a>
+              <a href="/questions/<%= question.id%>/edit" class="btn btn-warning">Edit question</a>
+            </td>
+        <%else%>
+            <td class="text-success">Up to date</td>
+            <td>
+              <a href="/questions/<%= question.id%>/edit" class="btn btn-warning">Edit question</a>
+            </td>
+      </tr>
+
+
+      <%end%>
+
+
+
+
+      <% end %>
+
+    </table>
+
+    <div class="btn-group btn-group-justified">
+      <a href="/goals" class="btn btn-primary">
+        Back
+      </a>
+      <a href="/goals/<%= @goal.id %>/edit" class="btn btn-warning">
+        Edit
+      </a>
+      <a href="/delete_goal/<%= @goal.id %>" class="btn btn-danger" rel="nofollow">
+        Delete
+      </a>
+    </div>
+
+
+
+  </div>
+  </div>
+
+
+
+

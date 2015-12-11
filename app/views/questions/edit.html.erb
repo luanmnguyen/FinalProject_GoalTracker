@@ -1,0 +1,43 @@
+<!-- Validation failure messages -->
+<% if @question.errors.any? %>
+  <% @question.errors.full_messages.each do |message| %>
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="page-header">
+  <h3>Edit Question: <%= @question.question_text %></h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="/update_question/<%= @question.id %>" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Input for cadence -->
+      <input id="cadence" name="cadence" type="hidden" value=1>
+
+      <!-- Label and input for question_text -->
+      <div class="form-group">
+        <label for="question_text" class="control-label">
+          Question
+        </label>
+
+        <textarea id="question_text" name="question_text" placeholder="Question text" class="form-control" rows="3"><%= @question.question_text %></textarea>
+      </div>
+
+      <!-- Input for goal_id -->
+      <input id="goal_id" name="goal_id" type="hidden" value=<%= @question.goal_id %>>
+
+      <button class="btn btn-warning">
+        Update Question
+      </button>
+      or
+      <a href="/questions/<%= @question.id %>">Cancel</a>
+    </form>
+  </div>
+</div>

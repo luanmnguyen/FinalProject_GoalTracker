@@ -1,0 +1,68 @@
+<!-- Validation failure messages -->
+<% if @answer.errors.any? %>
+  <% @answer.errors.full_messages.each do |message| %>
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="page-header">
+  <h3>Add Answer</h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="/create_answer" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for goal_id -->
+      <div class="form-group">
+        <label for="goal_id" class="control-label">
+          Goal: <%= @question.goal.goal_text %>
+        </label>
+      <input id="goal_id" name="goal_id" type="hidden" value="<%= @question.goal_id %>">
+      </div>
+
+      <!-- Label and input for question_id -->
+      <div class="form-group">
+        <label for="question_id" class="control-label">
+          Question: <%= @question.question_text %>
+        </label>
+      <input id="question_id" name="question_id" type="hidden" value="<%= @question.id %>">
+
+      </div>
+
+            <!-- Label and input for goal_id -->
+      <div class="form-group">
+
+        <% if @question.answers.count == 0  %>
+          <input type="hidden" id="questioned_on" name="questioned_on" value="<%= Time.now.to_date %>">
+        <% else %>
+          <label for="questioned_on" class="control-label">Date</label>
+          <% @exisiting_date = @question.answers.pluck(:questioned_on).uniq %>
+          <% @earliest_date = @question.answers.minimum(:questioned_on) %>
+          <% @all_date = (@earliest_date..Time.now.to_date).map(&:to_date)  %>
+          <%= select_tag(:questioned_on, options_for_select(@all_date - @exisiting_date), :class => "form-control") %>
+        <% end %>
+
+      <!-- Label and input for answer_text -->
+      <div class="form-group">
+        <label for="answer_text" class="control-label">
+          Check here if your answer is Yes. Leave blank otherwise.
+        </label>
+
+        <input type="checkbox" id="answer_text" name="answer_text" value="1" <%= "checked" if @answer.answer_text %>>
+
+      </div>
+
+      <button class="btn btn-success">
+        Create Answer
+      </button>
+      or
+      <a href="/answers">Cancel</a>
+    </form>
+  </div>
+</div>

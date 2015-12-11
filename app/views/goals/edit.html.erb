@@ -1,0 +1,40 @@
+<!-- Validation failure messages -->
+<% if @goal.errors.any? %>
+  <% @goal.errors.full_messages.each do |message| %>
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="page-header">
+  <h3>Edit Goal: <%= @goal.goal_text %></h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="/update_goal/<%= @goal.id %>" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Input for user_id -->
+      <input id="user_id" name="user_id" type="hidden" value="<%= @user_id %>">
+
+      <!-- Label and input for goal_text -->
+      <div class="form-group">
+        <label for="goal_text" class="control-label">
+          Goal
+        </label>
+
+        <textarea id="goal_text" name="goal_text" placeholder="Goal text" class="form-control" rows="3"><%= @goal.goal_text %></textarea>
+      </div>
+
+      <button class="btn btn-warning">
+        Update Goal
+      </button>
+      or
+      <a href="/goals/<%= @goal.id %>">Cancel</a>
+    </form>
+  </div>
+</div>

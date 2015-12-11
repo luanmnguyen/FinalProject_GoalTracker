@@ -1,0 +1,61 @@
+<!-- Validation failure messages -->
+<% if @answer.errors.any? %>
+  <% @answer.errors.full_messages.each do |message| %>
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="page-header">
+  <h3>Edit Answer #<%= @answer.id %></h3>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form action="/update_answer/<%= @answer.id %>" method="post">
+      <!-- Hidden input for authenticity token to protect from forgery -->
+      <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+
+      <!-- Label and input for answer_text -->
+      <div class="checkbox">
+        <label for="answer_text">
+          <input type="checkbox" id="answer_text" name="answer_text" value="1" <%= "checked" if @answer.answer_text %>>
+          Check for Yes. Uncheck for No.
+        </label>
+      </div>
+
+      <!-- Label and input for questioned_on -->
+      <div class="form-group">
+        <label for="questioned_on" class="control-label">
+          Date recorded
+        </label>
+
+        <input type="text" id="questioned_on" name="questioned_on" placeholder="Questioned on" class="form-control" value="<%= @answer.questioned_on %>">
+      </div>
+
+      <!-- Label and input for question_id -->
+      <div class="form-group">
+        <label for="question_id" class="control-label">
+          Question: <%= @answer.question.question_text %>
+        </label>
+        <input id="question_id" name="question_id" type="hidden" value="<%= @answer.question_id %>">
+      </div>
+
+      <!-- Label and input for goal_id -->
+      <div class="form-group">
+        <label for="goal_id" class="control-label">
+          Goal: <%= @answer.question.goal.goal_text %>
+        </label>
+        <input id="goal_id" name="goal_id" type="hidden" value="<%= @answer.goal_id %>">
+      </div>
+
+      <button class="btn btn-warning">
+        Update Answer
+      </button>
+      or
+      <a href="/answers/<%= @answer.id %>">Cancel</a>
+    </form>
+  </div>
+</div>
